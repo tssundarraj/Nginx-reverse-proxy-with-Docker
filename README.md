@@ -215,9 +215,7 @@ docker system prune -a
 
 ## ✍️ Author
 **T S Sundar Raj**
-
 ---
-
 ## 🙏 Thank You!
-![Thank You](https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Thank_You.svg/200px-Thank_You.svg.png)
+
 
