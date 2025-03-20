@@ -25,9 +25,9 @@ This project sets up a **FastAPI** application running behind an **NGINX reverse
 ---
 
 ## 🚀 Features
-- ✅ FastAPI application running on port **8000**
-- ✅ NGINX reverse proxy routing requests from **port 8080** to FastAPI
-- ✅ Swagger UI available at `http://localhost:8080/docs`
+- ✅ FastAPI application running on port **8000** internally
+- ✅ NGINX reverse proxy routing requests from **port 80** to FastAPI
+- ✅ Swagger UI available at `http://localhost/docs`
 - ✅ Dockerized setup for easy deployment
 
 ---
@@ -172,14 +172,12 @@ services:
   fastapi_app:
     build: ./fastapi_app
     container_name: fastapi_app
-    ports:
-      - "8000:8000"
   
   nginx:
     image: nginx:latest
     container_name: nginx_reverse_proxy
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
@@ -208,11 +206,10 @@ docker-compose up -d --build
 ---
 
 ## ✅ Testing the Setup
-- Test FastAPI Directly: `curl http://localhost:8000`
-- Test via NGINX: `curl http://localhost:8080`
+- Open FastAPI: `curl http://localhost`
 - Open Swagger UI:
-  - [http://localhost:8080/docs](http://localhost:8080/docs)
-  - [http://fastapi.local:8080/docs](http://fastapi.local:8080/docs)
+  - [http://localhost/docs](http://localhost/docs)
+  - [http://fastapi.local/docs](http://fastapi.local/docs)
 
 ---
 
@@ -225,9 +222,9 @@ docker system prune -a
 ---
 
 ## 🎯 Summary
-✔ **FastAPI** runs on port **8000**.  
-✔ **NGINX** reverse proxies traffic from **port 8080** to FastAPI.  
-✔ **Swagger UI** available at `http://localhost:8080/docs`.  
+✔ **FastAPI** runs on port **8000** internally.  
+✔ **NGINX** reverse proxies traffic from **port 80** to FastAPI.  
+✔ **Swagger UI** available at `http://localhost/docs`.  
 ✔ **Docker Compose** simplifies deployment.  
 ✔ **Custom domain access** via `/etc/hosts` is possible.  
 ✔ Everything runs inside **Docker** containers. 🚀  
