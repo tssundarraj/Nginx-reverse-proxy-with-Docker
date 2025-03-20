@@ -19,8 +19,9 @@ This project sets up a **FastAPI** application running behind an **NGINX reverse
 6. [Testing the Setup](#testing-the-setup)
 7. [Stopping and Cleaning Up](#stopping-and-cleaning-up)
 8. [Summary](#summary)
-9. [Author](#author)
-10. [Thank You](#thank-you)
+9. [Docker Compose File Explanation](#docker-compose-file-explanation)
+10. [Author](#author)
+11. [Thank You](#thank-you)
 
 ---
 
@@ -170,37 +171,18 @@ version: "3.8"
 
 services:
   fastapi_app:
-    build: ./fastapi_app
-    container_name: fastapi_app
+    build: ./fastapi_app  # Builds the FastAPI application from the specified directory
+    container_name: fastapi_app  # Names the container as "fastapi_app"
   
   nginx:
-    image: nginx:latest
-    container_name: nginx_reverse_proxy
+    image: nginx:latest  # Uses the latest NGINX image from Docker Hub
+    container_name: nginx_reverse_proxy  # Names the container as "nginx_reverse_proxy"
     ports:
-      - "80:80"
+      - "80:80"  # Maps port 80 on the host to port 80 in the container
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # Mounts NGINX configuration file in read-only mode
     depends_on:
-      - fastapi_app
-```
-
----
-
-### 5️⃣ Step 5: Add Entry in `/etc/hosts`
-```bash
-sudo nano /etc/hosts
-```
-Add the following line:
-```
-127.0.0.1    fastapi.local
-```
-Save and exit.
-
----
-
-### 6️⃣ Step 6: Build and Run the Containers
-```bash
-docker-compose up -d --build
+      - fastapi_app  # Ensures NGINX starts only after FastAPI is running
 ```
 
 ---
@@ -238,6 +220,4 @@ docker system prune -a
 
 ## 🙏 Thank You!
 ![Thank You](https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Thank_You.svg/200px-Thank_You.svg.png)
-
-Let me know if you need any modifications! 😊
 
