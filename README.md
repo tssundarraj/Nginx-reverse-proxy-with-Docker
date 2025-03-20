@@ -14,8 +14,8 @@ This project sets up a **FastAPI** application running behind an **NGINX reverse
    - [Step 2: Create the FastAPI Application](#step-2-create-the-fastapi-application)
    - [Step 3: Setup NGINX Reverse Proxy](#step-3-setup-nginx-reverse-proxy)
    - [Step 4: Create docker-compose.yml](#step-4-create-docker-composeyml)
-   - [Step 5: Add Entry in /etc/hosts](#step-5-add-entry-in-etchosts)
-   - [Step 6: Build and Run the Containers](#step-6-build-and-run-the-containers)
+   - [Step 5: Build and Run the Containers](#step-5-build-and-run-the-containers)
+   - [Step 6: Add Entry in /etc/hosts](#step-6-add-entry-in-etchosts)
 6. [Testing the Setup](#testing-the-setup)
 7. [Stopping and Cleaning Up](#stopping-and-cleaning-up)
 8. [Summary](#summary)
@@ -171,19 +171,43 @@ version: "3.8"
 
 services:
   fastapi_app:
-    build: ./fastapi_app  # Builds the FastAPI application from the specified directory
-    container_name: fastapi_app  # Names the container as "fastapi_app"
+    build: ./fastapi_app
+    container_name: fastapi_app
   
   nginx:
-    image: nginx:latest  # Uses the latest NGINX image from Docker Hub
-    container_name: nginx_reverse_proxy  # Names the container as "nginx_reverse_proxy"
+    image: nginx:latest
+    container_name: nginx_reverse_proxy
     ports:
-      - "80:80"  # Maps port 80 on the host to port 80 in the container
+      - "80:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # Mounts NGINX configuration file in read-only mode
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - fastapi_app  # Ensures NGINX starts only after FastAPI is running
+      - fastapi_app
 ```
+
+---
+
+### 5️⃣ Step 5: Build and Run the Containers
+```bash
+docker-compose up -d --build
+```
+This command:
+- Builds the FastAPI image
+- Starts both FastAPI and NGINX in detached mode
+
+To check running containers:
+```bash
+docker ps
+```
+
+---
+
+### 6️⃣ Step 6: Add Entry in `/etc/hosts`
+To access the application with a custom hostname, add an entry to `/etc/hosts`:
+```bash
+echo "127.0.0.1 fastapi.local" | sudo tee -a /etc/hosts
+```
+Now, you can access the API at `http://fastapi.local`.
 
 ---
 
@@ -215,7 +239,9 @@ docker system prune -a
 
 ## ✍️ Author
 **T S Sundar Raj**
----
- **🙏 Thank You!**
 
+---
+
+## 🙏 Thank You!
+![Thank You](https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Thank_You.svg/200px-Thank_You.svg.png)
 
