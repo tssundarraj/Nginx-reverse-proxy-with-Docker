@@ -62,7 +62,7 @@ Nginx-reverse-proxy-with-Docker/
 ### Step 1: Clone the Repository
 ```sh
 git clone https://github.com/tssundarraj/Nginx-reverse-proxy-with-Docker.git
-cd fastapi-nginx-docker
+cd Nginx-reverse-proxy-with-Docker
 ```
 
 ### Step 2: Create the FastAPI Application
