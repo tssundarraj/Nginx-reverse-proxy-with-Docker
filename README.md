@@ -105,10 +105,10 @@ http {
 }
 
 ```
-🚀 Why This Fix Works?
-The server {} block must be inside the http {} block.
-proxy_pass should match the FastAPI service name (fastapi_app in docker-compose.yml).
-Defines worker_processes and events, which NGINX requires.
+🚀 Why This Fix Works?  
+The `server {}` block must be inside the `http {}` block.  
+`proxy_pass` should match the FastAPI service name (`fastapi_app in docker-compose.yml`).  
+Defines `worker_processes` and `events`, which NGINX requires.  
 
 ### Step 4: Create the Dockerfile
 Inside `app/`, create `Dockerfile`:
