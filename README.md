@@ -213,7 +213,7 @@ Here are some ideas for expanding this project:
 - **Automate Deployment**: Use CI/CD tools like GitHub Actions or Jenkins.
 
 ## 👨‍💻 Author
-[T S Sundar Raj]
+T S Sundar Raj
 
 ## 🙏 Thank You!
 Happy coding! 🎉
