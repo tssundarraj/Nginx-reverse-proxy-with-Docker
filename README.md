@@ -85,14 +85,14 @@ def read_item(item_id: int, q: str = None):
 Create an NGINX configuration file `nginx.conf` inside the `nginx/` directory.
 ```nginx
 server {
-    listen 80;
-    server_name localhost;
+    listen 80; # Listen on port 80
+    server_name localhost; # Define the server name
 
     location / {
-        proxy_pass http://fastapi:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://fastapi:8000; # Forward requests to the FastAPI container
+        proxy_set_header Host $host; # Preserve the host header
+        proxy_set_header X-Real-IP $remote_addr; # Forward the real IP address
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; # Forward client information
     }
 }
 ```
@@ -124,22 +124,24 @@ Create a `docker-compose.yml` file to define the services.
 ```yaml
 version: '3.8'
 
+version: '3.8' # Use Docker Compose version 3.8
+
 services:
   fastapi:
-    build: ./app
-    container_name: fastapi_app
+    build: ./app # Build FastAPI from the app directory
+    container_name: fastapi_app # Name the container
     ports:
-      - "8000:8000"
+      - "8000:8000" # Expose FastAPI on port 8000
 
   nginx:
-    image: nginx:latest
-    container_name: nginx_proxy
+    image: nginx:latest # Use the latest NGINX image
+    container_name: nginx_proxy # Name the NGINX container
     ports:
-      - "80:80"
+      - "80:80" # Expose NGINX on port 80
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Mount the NGINX configuration file
     depends_on:
-      - fastapi
+      - fastapi # Ensure NGINX starts after FastAPI
 ```
 
 ### Step 6: Build and Run the Containers
@@ -180,6 +182,17 @@ http://fastapi.local
 Or use `curl`:
 ```sh
 curl http://fastapi.local
+```
+---
+
+## 🗑️ Clean Up
+To stop and remove the running containers, use:
+```sh
+docker-compose down
+```
+To remove all images, volumes, and networks created by Docker Compose:
+```sh
+docker system prune -a
 ```
 
 ---
