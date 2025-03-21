@@ -84,18 +84,31 @@ def read_item(item_id: int, q: str = None):
 ### Step 3: Setup NGINX Reverse Proxy
 Create an NGINX configuration file `nginx.conf` inside the `nginx/` directory.
 ```nginx
-server {
-    listen 80; # Listen on port 80
-    server_name localhost; # Define the server name
+worker_processes auto;
 
-    location / {
-        proxy_pass http://fastapi:8000; # Forward requests to the FastAPI container
-        proxy_set_header Host $host; # Preserve the host header
-        proxy_set_header X-Real-IP $remote_addr; # Forward the real IP address
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; # Forward client information
+events {
+    worker_connections 1024;
+}
+
+http {
+    server {
+        listen 80;
+        server_name localhost;
+
+        location / {
+            proxy_pass http://fastapi_app:8000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
     }
 }
+
 ```
+🚀 Why This Fix Works?
+The server {} block must be inside the http {} block.
+proxy_pass should match the FastAPI service name (fastapi_app in docker-compose.yml).
+Defines worker_processes and events, which NGINX requires.
 
 ### Step 4: Create the Dockerfile
 Inside `app/`, create `Dockerfile`:
