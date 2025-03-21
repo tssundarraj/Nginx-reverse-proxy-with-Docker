@@ -3,6 +3,7 @@
 This project sets up a **FastAPI** application running behind an **NGINX reverse proxy** using Docker and Docker Compose.
 
 ---
+![Banner](/images/fastapi_ingress.png)
 
 ## 📖 Table of Contents
 
