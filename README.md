@@ -47,7 +47,7 @@ A **reverse proxy** like NGINX is used in this project to:
 
 ## 📂 Project Structure
 ```
-fastapi-nginx-docker/
+Nginx-reverse-proxy-with-Docker/
 │── app/
 │   ├── main.py
 │   ├── Dockerfile
@@ -61,7 +61,7 @@ fastapi-nginx-docker/
 
 ### Step 1: Clone the Repository
 ```sh
-git clone https://github.com/your-username/fastapi-nginx-docker.git
+git clone https://github.com/tssundarraj/Nginx-reverse-proxy-with-Docker.git
 cd fastapi-nginx-docker
 ```
 
