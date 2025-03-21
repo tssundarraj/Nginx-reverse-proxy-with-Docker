@@ -65,6 +65,64 @@ Nginx-reverse-proxy-with-Docker/
 git clone https://github.com/tssundarraj/Nginx-reverse-proxy-with-Docker.git
 cd Nginx-reverse-proxy-with-Docker
 ```
+### Step 6: Build and Run the Containers
+Run the following command to build and start the containers:
+```sh
+docker-compose up --build -d
+```
+
+### Step 7: Add Entry in `/etc/hosts`
+Modify the `/etc/hosts` file to map `localhost` to the local environment:
+```sh
+echo "127.0.0.1 fastapi.local" | sudo tee -a /etc/hosts
+```
+This will allow you to access the FastAPI app via `http://fastapi.local` instead of using an IP address.
+
+---
+
+## 🌐 Accessing Swagger UI
+FastAPI automatically provides interactive API documentation using **Swagger UI**.
+- Open your browser and visit:
+  ```
+  http://fastapi.local/docs
+  ```
+  or
+  ```
+  http://127.0.0.1/docs
+  ```
+- For **Redoc UI**, visit:
+  ```
+  http://fastapi.local/redoc
+  ```
+
+## 🔎 Testing the Setup
+Open your browser and visit:
+```
+http://fastapi.local
+```
+Or use `curl`:
+```sh
+curl http://fastapi.local
+```
+---
+
+## 🗑️ Clean Up
+To stop and remove the running containers, use:
+```sh
+docker-compose down
+```
+To remove all images, volumes, and networks created by Docker Compose:
+```sh
+docker system prune -a
+```
+
+---
+
+## 📌 Summary
+- FastAPI serves the API on port **8000**.
+- NGINX acts as a reverse proxy on port **80**.
+- Docker Compose manages both containers.
+- Swagger UI is accessible at `/docs`.
 
 ### Step 2: Create the FastAPI Application
 Inside `app/`, create `main.py`:
@@ -158,64 +216,7 @@ services:
       - fastapi # Ensure NGINX starts after FastAPI
 ```
 
-### Step 6: Build and Run the Containers
-Run the following command to build and start the containers:
-```sh
-docker-compose up --build -d
-```
 
-### Step 7: Add Entry in `/etc/hosts`
-Modify the `/etc/hosts` file to map `localhost` to the local environment:
-```sh
-echo "127.0.0.1 fastapi.local" | sudo tee -a /etc/hosts
-```
-This will allow you to access the FastAPI app via `http://fastapi.local` instead of using an IP address.
-
----
-
-## 🌐 Accessing Swagger UI
-FastAPI automatically provides interactive API documentation using **Swagger UI**.
-- Open your browser and visit:
-  ```
-  http://fastapi.local/docs
-  ```
-  or
-  ```
-  http://127.0.0.1/docs
-  ```
-- For **Redoc UI**, visit:
-  ```
-  http://fastapi.local/redoc
-  ```
-
-## 🔎 Testing the Setup
-Open your browser and visit:
-```
-http://fastapi.local
-```
-Or use `curl`:
-```sh
-curl http://fastapi.local
-```
----
-
-## 🗑️ Clean Up
-To stop and remove the running containers, use:
-```sh
-docker-compose down
-```
-To remove all images, volumes, and networks created by Docker Compose:
-```sh
-docker system prune -a
-```
-
----
-
-## 📌 Summary
-- FastAPI serves the API on port **8000**.
-- NGINX acts as a reverse proxy on port **80**.
-- Docker Compose manages both containers.
-- Swagger UI is accessible at `/docs`.
 
 ## 🚀 Next Steps
 Here are some ideas for expanding this project:
