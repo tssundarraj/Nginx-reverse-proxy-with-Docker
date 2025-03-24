@@ -3,27 +3,31 @@
 This project sets up a **FastAPI** application running behind an **NGINX reverse proxy** using Docker and Docker Compose.
 
 ---
+![Banner](/images/fastapi_ingress.png)
 
 ## 📖 Table of Contents
 
-1. [Features](#features)
-2. [Prerequisites](#prerequisites)
-3. [Why Use a Reverse Proxy?](#why-use-a-reverse-proxy)
-4. [Project Structure](#project-structure)
-5. [Setup Instructions](#setup-instructions)
+- [FastAPI with NGINX Reverse Proxy in Docker](#fastapi-with-nginx-reverse-proxy-in-docker)
+  - [📖 Table of Contents](#-table-of-contents)
+  - [🚀 Features](#-features)
+  - [📌 Prerequisites](#-prerequisites)
+  - [🌍 Why Use a Reverse Proxy?](#-why-use-a-reverse-proxy)
+  - [📂 Project Structure](#-project-structure)
+  - [🛠️ Setup Instructions](#️-setup-instructions)
     - [Step 1: Clone the Repository](#step-1-clone-the-repository)
+    - [Step 6: Build and Run the Containers](#step-6-build-and-run-the-containers)
+    - [Step 7: Add Entry in `/etc/hosts`](#step-7-add-entry-in-etchosts)
+  - [🌐 Accessing Swagger UI](#-accessing-swagger-ui)
+  - [🔎 Testing the Setup](#-testing-the-setup)
+  - [🗑️ Clean Up](#️-clean-up)
+  - [📌 Summary](#-summary)
     - [Step 2: Create the FastAPI Application](#step-2-create-the-fastapi-application)
     - [Step 3: Setup NGINX Reverse Proxy](#step-3-setup-nginx-reverse-proxy)
     - [Step 4: Create the Dockerfile](#step-4-create-the-dockerfile)
-    - [Step 5: Create docker-compose.yml](#step-5-create-docker-composeyml)
-    - [Step 6: Build and Run the Containers](#step-6-build-and-run-the-containers)
-    - [Step 7: Add Entry in /etc/hosts](#step-7-add-entry-in-etc-hosts)
-6. [Accessing Swagger UI](#accessing-swagger-ui)
-7. [Testing the Setup](#testing-the-setup)
-8. [Summary](#summary)
-9. [Next Steps](#next-steps)
-10. [Author](#author)
-11. [Thank You](#thank-you)
+    - [Step 5: Create `docker-compose.yml`](#step-5-create-docker-composeyml)
+  - [🚀 Next Steps](#-next-steps)
+  - [👨‍💻 Author](#-author)
+  - [🙏 Thank You!](#-thank-you)
 
 ---
 
@@ -43,7 +47,8 @@ A **reverse proxy** like NGINX is used in this project to:
 - **Load Balancing**: Distributes traffic when multiple FastAPI instances are running.
 - **SSL Termination**: Handles HTTPS at the proxy level.
 - **Performance Optimization**: Caching and compression features can improve response times.
-- **Custom Domain Handling**: Allows mapping FastAPI to a friendly domain instead of an IP and port.
+- **Custom Domain Handling**: Allows mapping FastAPI to a friendly domain instead of an IP and port.  
+**For Detials:** https://github.com/tssundarraj/Reverse-Proxy-with-Nginx-and-Docker.git
 
 ## 📂 Project Structure
 ```
@@ -64,86 +69,6 @@ Nginx-reverse-proxy-with-Docker/
 git clone https://github.com/tssundarraj/Nginx-reverse-proxy-with-Docker.git
 cd Nginx-reverse-proxy-with-Docker
 ```
-
-### Step 2: Create the FastAPI Application
-Inside `app/`, create `main.py`:
-```python
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return {"message": "Hello from FastAPI!"}
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "query": q}
-```
-
-### Step 3: Setup NGINX Reverse Proxy
-Create an NGINX configuration file `nginx.conf` inside the `nginx/` directory.
-```nginx
-server {
-    listen 80; # Listen on port 80
-    server_name localhost; # Define the server name
-
-    location / {
-        proxy_pass http://fastapi:8000; # Forward requests to the FastAPI container
-        proxy_set_header Host $host; # Preserve the host header
-        proxy_set_header X-Real-IP $remote_addr; # Forward the real IP address
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; # Forward client information
-    }
-}
-```
-
-### Step 4: Create the Dockerfile
-Inside `app/`, create `Dockerfile`:
-```dockerfile
-# Use official Python image
-FROM python:3.9
-
-# Set working directory
-WORKDIR /app
-
-# Copy FastAPI app files
-COPY . .
-
-# Install dependencies
-RUN pip install --no-cache-dir fastapi uvicorn
-
-# Expose FastAPI port
-EXPOSE 8000
-
-# Run FastAPI server
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Step 5: Create `docker-compose.yml`
-Create a `docker-compose.yml` file to define the services.
-```yaml
-version: '3.8'
-
-version: '3.8' # Use Docker Compose version 3.8
-
-services:
-  fastapi:
-    build: ./app # Build FastAPI from the app directory
-    container_name: fastapi_app # Name the container
-    ports:
-      - "8000:8000" # Expose FastAPI on port 8000
-
-  nginx:
-    image: nginx:latest # Use the latest NGINX image
-    container_name: nginx_proxy # Name the NGINX container
-    ports:
-      - "80:80" # Expose NGINX on port 80
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Mount the NGINX configuration file
-    depends_on:
-      - fastapi # Ensure NGINX starts after FastAPI
-```
-
 ### Step 6: Build and Run the Containers
 Run the following command to build and start the containers:
 ```sh
@@ -202,6 +127,100 @@ docker system prune -a
 - NGINX acts as a reverse proxy on port **80**.
 - Docker Compose manages both containers.
 - Swagger UI is accessible at `/docs`.
+
+### Step 2: Create the FastAPI Application
+Inside `app/`, create `main.py`:
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello from FastAPI!"}
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: str = None):
+    return {"item_id": item_id, "query": q}
+```
+
+### Step 3: Setup NGINX Reverse Proxy
+Create an NGINX configuration file `nginx.conf` inside the `nginx/` directory.
+```nginx
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    server {
+        listen 80;
+        server_name localhost;
+
+        location / {
+            proxy_pass http://fastapi_app:8000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+    }
+}
+
+```
+🚀 Why This Fix Works?  
+The `server {}` block must be inside the `http {}` block.  
+`proxy_pass` should match the FastAPI service name (`fastapi_app in docker-compose.yml`).  
+Defines `worker_processes` and `events`, which NGINX requires.  
+
+### Step 4: Create the Dockerfile
+Inside `app/`, create `Dockerfile`:
+```dockerfile
+# Use official Python image
+FROM python:3.9
+
+# Set working directory
+WORKDIR /app
+
+# Copy FastAPI app files
+COPY . .
+
+# Install dependencies
+RUN pip install --no-cache-dir fastapi uvicorn
+
+# Expose FastAPI port
+EXPOSE 8000
+
+# Run FastAPI server
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+### Step 5: Create `docker-compose.yml`
+Create a `docker-compose.yml` file to define the services.
+```yaml
+version: '3.8'
+
+version: '3.8' # Use Docker Compose version 3.8
+
+services:
+  fastapi:
+    build: ./app # Build FastAPI from the app directory
+    container_name: fastapi_app # Name the container
+    ports:
+      - "8000:8000" # Expose FastAPI on port 8000
+
+  nginx:
+    image: nginx:latest # Use the latest NGINX image
+    container_name: nginx_proxy # Name the NGINX container
+    ports:
+      - "80:80" # Expose NGINX on port 80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Mount the NGINX configuration file
+    depends_on:
+      - fastapi # Ensure NGINX starts after FastAPI
+```
+
+
 
 ## 🚀 Next Steps
 Here are some ideas for expanding this project:

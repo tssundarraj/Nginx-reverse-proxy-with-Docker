@@ -1,20 +1,27 @@
 version: '3.8'
 
-version: '3.8' # Use Docker Compose version 3.8
-
 services:
   fastapi:
-    build: ./app # Build FastAPI from the app directory
-    container_name: fastapi_app # Name the container
+    build: ./app
+    container_name: fastapi_app
     ports:
-      - "8000:8000" # Expose FastAPI on port 8000
+      - "8000:8000"  # Expose FastAPI on 8000
+    networks:
+      - my_network  # Attach to the network
 
   nginx:
-    image: nginx:latest # Use the latest NGINX image
-    container_name: nginx_proxy # Name the NGINX container
+    image: nginx:latest
+    container_name: nginx_proxy
     ports:
-      - "80:80" # Expose NGINX on port 80
+      - "80:80"  # Expose NGINX on 80
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Mount the NGINX configuration file
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # Mount the NGINX config
     depends_on:
-      - fastapi # Ensure NGINX starts after FastAPI
+      - fastapi
+    networks:
+      - my_network  # Attach to the network
+
+# Define networks at the root level
+networks:
+  my_network:
+    driver: bridge
