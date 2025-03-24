@@ -45,6 +45,7 @@ A **reverse proxy** like NGINX is used in this project to:
 - **SSL Termination**: Handles HTTPS at the proxy level.
 - **Performance Optimization**: Caching and compression features can improve response times.
 - **Custom Domain Handling**: Allows mapping FastAPI to a friendly domain instead of an IP and port.
+**For Detials:** https://github.com/tssundarraj/Reverse-Proxy-with-Nginx-and-Docker.git
 
 ## 📂 Project Structure
 ```
